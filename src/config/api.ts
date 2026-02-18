@@ -1,18 +1,17 @@
-// Configuração da API do Clawbot
-// Altere esta URL para apontar para seu backend
-export const API_CONFIG = {
-  baseUrl: 'https://your-vps-url.com/api',
-  endpoint: '/chat',
-  get fullUrl() {
-    return `${this.baseUrl}${this.endpoint}`;
-  },
-};
+const API_URL = import.meta.env.VITE_API_URL || 'http://167.88.33.83:8080/api/v1/message';
+const API_TOKEN = import.meta.env.VITE_API_TOKEN as string | undefined;
 
 export async function sendTranscription(text: string): Promise<string> {
   try {
-    const response = await fetch(API_CONFIG.fullUrl, {
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+
+    if (API_TOKEN) {
+      headers.Authorization = `Bearer ${API_TOKEN}`;
+    }
+
+    const response = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ message: text }),
     });
 
