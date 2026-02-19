@@ -1,5 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://167.88.33.83:8080/api/v1/message';
+const API_URL = '/api/v1/message';
 const API_TOKEN = import.meta.env.VITE_API_TOKEN as string | undefined;
+const API_SESSION = import.meta.env.VITE_API_SESSION || 'main';
 
 export async function sendTranscription(text: string): Promise<string> {
   try {
@@ -12,7 +13,7 @@ export async function sendTranscription(text: string): Promise<string> {
     const response = await fetch(API_URL, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ message: text }),
+      body: JSON.stringify({ text, session: API_SESSION }),
     });
 
     if (!response.ok) {
@@ -20,7 +21,7 @@ export async function sendTranscription(text: string): Promise<string> {
     }
 
     const data = await response.json();
-    return data.response || data.message || 'Sem resposta do servidor.';
+    return data.response || data.message || data.text || 'Sem resposta do servidor.';
   } catch (error) {
     console.error('Erro ao contactar Clawbot:', error);
     return 'Desculpe, não consegui contactar o servidor. Verifique a conexão.';

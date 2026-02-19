@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.17",
+    "lastTouchedAt": "2026-02-19T00:42:27.948Z"
+  },
+  "browser": {
+    "headless": true,
+    "noSandbox": true,
+    "defaultProfile": "openclaw"
+  },
+  "models": {
+    "mode": "merge"
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "Gemini 3 Pro Preview"
+      },
+      "models": {
+        "google/gemini-3-pro-preview": {
+          "alias": "Gemini 3 Pro Preview"
+        },
+        "google/gemini-3-flash-preview": {
+          "alias": "Gemini 3 Flash Preview"
+        },
+        "google/gemini-2.5-flash": {
+          "alias": "Gemini 2.5 Flash"
+        },
+        "google/gemini-2.5-flash-lite": {
+          "alias": "Gemini 2.5 Flash Lite"
+        }
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "name": "main"
+      }
+    ]
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "bash": true,
+    "restart": true
+  },
+  "hooks": {
+    "token": "__OPENCLAW_REDACTED__"
+  },
+  "gateway": {
+    "mode": "local",
+    "controlUi": {
+      "allowedOrigins": [
+        "*"
+      ],
+      "allowInsecureAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "__OPENCLAW_REDACTED__"
+    },
+    "trustedProxies": [
+      "127.0.0.1/32"
+    ],
+    "remote": {
+      "token": "__OPENCLAW_REDACTED__"
+    }
+  },
+  "skills": {
+    "entries": {
+      "apple-notes": {
+        "enabled": true
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "whatsapp": {
+        "enabled": true
+      },
+      "discord": {
+        "enabled": true
+      },
+      "imessage": {
+        "enabled": false
+      },
+      "telegram": {
+        "enabled": true
+      },
+      "slack": {
+        "enabled": true
+      },
+      "nostr": {
+        "enabled": true
+      },
+      "signal": {
+        "enabled": false
+      },
+      "googlechat": {
+        "enabled": true
+      }
+    }
+  }
+}
