@@ -3,10 +3,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { LogEntry } from '@/hooks/useVoiceRecognition';
-import { sendTranscription } from '@/config/api';
 
 interface TerminalPanelProps {
   logs: LogEntry[];
+  onSend: (message: string) => Promise<void>;
 }
 
 const typeColors: Record<string, string> = {
@@ -21,7 +21,7 @@ const typeLabels: Record<string, string> = {
   jarvis: 'JAR',
 };
 
-export function TerminalPanel({ logs }: TerminalPanelProps) {
+export function TerminalPanel({ logs, onSend }: TerminalPanelProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [text, setText] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -37,12 +37,7 @@ export function TerminalPanel({ logs }: TerminalPanelProps) {
 
     setIsSending(true);
     try {
-      const responseText = await sendTranscription(value);
-      const utterance = new SpeechSynthesisUtterance(responseText);
-      utterance.lang = 'pt-BR';
-      utterance.rate = 0.9;
-      utterance.pitch = 0.8;
-      speechSynthesis.speak(utterance);
+      await onSend(value);
     } finally {
       setIsSending(false);
       setText('');

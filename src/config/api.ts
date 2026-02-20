@@ -1,8 +1,17 @@
-const API_URL = '/api/v1/message';
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1/message';
 const API_TOKEN = import.meta.env.VITE_API_TOKEN as string | undefined;
 const API_SESSION = import.meta.env.VITE_API_SESSION || 'main';
+const API_MODEL = import.meta.env.VITE_API_MODEL || 'Gemini 2.5 Flash';
+const API_MAX_TOKENS = Number(import.meta.env.VITE_API_MAX_TOKENS || 100);
 
-export async function sendTranscription(text: string): Promise<string> {
+export type ChatRole = 'system' | 'user' | 'assistant';
+
+export interface ChatMessage {
+  role: ChatRole;
+  content: string;
+}
+
+export async function sendTranscription(text: string, history: ChatMessage[] = []): Promise<string> {
   try {
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
 
@@ -10,10 +19,17 @@ export async function sendTranscription(text: string): Promise<string> {
       headers.Authorization = `Bearer ${API_TOKEN}`;
     }
 
+    const messages = [...history, { role: 'user', content: text }].filter(message => message.content);
+
     const response = await fetch(API_URL, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ text, session: API_SESSION }),
+      body: JSON.stringify({
+        messages,
+        model: API_MODEL,
+        max_tokens: API_MAX_TOKENS,
+        session: API_SESSION,
+      }),
     });
 
     if (!response.ok) {
@@ -21,7 +37,12 @@ export async function sendTranscription(text: string): Promise<string> {
     }
 
     const data = await response.json();
-    return data.response || data.message || data.text || 'Sem resposta do servidor.';
+    const message =
+      data?.choices?.[0]?.message?.content ||
+      data?.response ||
+      data?.message ||
+      data?.text;
+    return message || 'Sem resposta do servidor.';
   } catch (error) {
     console.error('Erro ao contactar Clawbot:', error);
     return 'Desculpe, não consegui contactar o servidor. Verifique a conexão.';

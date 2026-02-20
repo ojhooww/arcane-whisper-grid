@@ -4,7 +4,7 @@ import { TerminalPanel } from '@/components/jarvis/TerminalPanel';
 import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 
 const Index = () => {
-  const { state, logs, voiceLevel } = useVoiceRecognition();
+  const { state, logs, voiceLevel, sendMessage } = useVoiceRecognition();
   const isActive = state !== 'idle';
 
   return (
@@ -16,7 +16,7 @@ const Index = () => {
       <HudOverlay state={state} />
 
       {/* Terminal log panel */}
-      <TerminalPanel logs={logs} />
+      <TerminalPanel logs={logs} onSend={sendMessage} />
     </div>
   );
 };
